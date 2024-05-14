@@ -29,7 +29,7 @@ export default function Page() {
     }
 
     if (therapist?.isLoggedIn) {
-      therapist?.onboarded ? router.push("/appointment") : router.push("/auth/profile");
+      therapist?.onboarded ? router.push("/") : router.push("/auth/profile");
     }
   }, [therapist, isError, isSuccess, message, router, dispatch]);
 

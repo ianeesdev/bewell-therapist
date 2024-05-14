@@ -78,7 +78,7 @@ export default function Page() {
           </>
         ) : (
           <>
-            <div className="w-[70%] flex flex-col gap-4">
+            <div className="w-full flex flex-col gap-4">
               <h1 className="text-3xl font-semibold">Appointments</h1>
               <div
                 className={`${
@@ -120,6 +120,7 @@ export default function Page() {
                             (appointment: any, index: any) => (
                               <AppointmentCard
                                 key={index}
+                                appointmentId={appointment?._id}
                                 userID={appointment?.userId._id}
                                 name={
                                   appointment?.userId.name ||
@@ -134,6 +135,7 @@ export default function Page() {
                             (appointment: any, index: any) => (
                               <AppointmentCard
                                 key={index}
+                                appointmentId={appointment?._id}
                                 userID={appointment?.userId._id}
                                 name={
                                   appointment?.userId.name ||

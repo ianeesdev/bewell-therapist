@@ -37,7 +37,7 @@ const Button: React.FC<ButtonProps> = ({
       break;
     case "tertiary":
       variantClasses =
-        "text-deepAqua font-semibold bg-[#1D6C861F] hover:bg-deepAqua hover:text-white rounded-lg px-6 py-2";
+        "text-deepAqua font-semibold bg-[#1D6C861F] hover:bg-deepAqua hover:text-white rounded-full px-6 py-2";
       break;
     default:
       variantClasses = "";

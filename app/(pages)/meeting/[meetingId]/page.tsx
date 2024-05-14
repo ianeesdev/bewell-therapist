@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { ZegoUIKitPrebuilt } from "@zegocloud/zego-uikit-prebuilt";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
+
+import { handlePaymentCompletion } from "@/app/redux/features/payment/paymentSlice";
 
 interface PageProps {
   params: {
@@ -16,11 +18,12 @@ export default function Page({ params }: PageProps) {
   const { therapist } = useSelector((state: any) => state.auth);
   const elementRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const myMeeting = async () => {
-      const appID = 1039959667;
-      const serverSecret = "f6bddb379bb410e9c4d071bd38188f14";
+      const appID = 1812045985;
+      const serverSecret = "1b4292e3cdaff717f4d0a0f3e19bf09a";
       const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(
         appID,
         serverSecret,
@@ -37,7 +40,7 @@ export default function Page({ params }: PageProps) {
             name: "Copy Link",
             url: `http://localhost:3000/meeting/${meetingId}`
           }],
-          onLeaveRoom: () => router.push("/appointment"),
+          onLeaveRoom: () => afterMeetingLeave(),
           scenario: {
             mode: ZegoUIKitPrebuilt.OneONoneCall,
           },
@@ -47,6 +50,11 @@ export default function Page({ params }: PageProps) {
 
     myMeeting();
   }, [meetingId, therapist]);
+
+  const afterMeetingLeave = () => {
+    dispatch(handlePaymentCompletion());
+    router.push("/appointment");
+  }
 
   return <div ref={elementRef} style={{ width: '100vw', height: '100vh' }}></div>;
 }

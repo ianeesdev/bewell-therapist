@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Navbar from "@/components/common/Navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -8,30 +8,14 @@ import { GoArrowLeft } from "react-icons/go";
 import { TbStarHalfFilled } from "react-icons/tb";
 import Button from "@/components/common/Button";
 import ReviewCard from "@/components/appointments/ReviewCard";
-import AppointmentDrawer from "@/components/appointments/AppointmentDrawer";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useSelector } from "react-redux";
 
 export default function Page() {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { therapists } = useSelector((state: any) => state.therapists);
-  const [therapist, setTherapist] = useState(null);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
-  const searchParams = useSearchParams();
-  const therapistId = searchParams.get("therapistId");
-
-  useEffect(() => {
-    const foundTherapist = therapists.find((t: any) => t._id === therapistId);
-    if (foundTherapist) {
-      setTherapist(foundTherapist);
-    }
-  }, [therapistId, therapists]);
+  const { therapist } = useSelector(
+    (state: any) => state.auth
+  );
 
   return (
     <div className="bg-paleGrey relative">
@@ -39,7 +23,7 @@ export default function Page() {
         <Navbar />
       </div>
       <div className="absolute left-14 mt-6">
-        <Link href="/appointment" className="flex gap-2 items-center">
+        <Link href="/" className="flex gap-2 items-center">
           <GoArrowLeft size={30} />
           <p className="text-xl font-medium">Back</p>
         </Link>
@@ -67,11 +51,6 @@ export default function Page() {
                     {therapist?.specialty}, {therapist?.location}
                   </p>
                 </div>
-                <div>
-                  <Button variant="secondary" className="text-md px-6 py-3">
-                    Send Message
-                  </Button>
-                </div>
               </div>
               <div className="flex gap-8">
                 <div className="p-6 drop-shadow-xl bg-paleGrey rounded-xl text-center">
@@ -91,9 +70,9 @@ export default function Page() {
           </div>
 
           <div className="flex">
-            <div className="flex flex-col gap-3">
+            <div className="w-full flex flex-col gap-3">
               <h2 className="text-xl font-semibold">About Therapist</h2>
-              <p className="max-w-[70%]">{therapist?.about}</p>
+              <p className="w-[70%]">{therapist?.about}</p>
             </div>
             <div className="w-full flex justify-end">
               <div className="p-6 drop-shadow-xl bg-paleGrey rounded-xl flex items-center gap-10">
@@ -108,7 +87,7 @@ export default function Page() {
                   <Button
                     variant="primary"
                     className="text-md py-3 px-7"
-                    onClick={toggleDrawer}
+          
                   >
                     Book Appointment
                   </Button>
@@ -141,7 +120,6 @@ export default function Page() {
           </div>
         </div>
       </div>
-      {isDrawerOpen && <AppointmentDrawer onClose={toggleDrawer} />}
     </div>
   );
 }

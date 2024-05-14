@@ -10,13 +10,13 @@ const initialState = {
 };
 
 // get client secret
-export const getClientSecret = createAsyncThunk(
-  "payment/getClientSecret",
+export const handlePaymentCompletion = createAsyncThunk(
+  "payment/handlePaymentCompletion",
   async (_, thunkAPI) => {
     try {
-      const id = thunkAPI.getState().auth.user._id;
-      const token = thunkAPI.getState().auth.user.token;
-      return await paymentService.getClientSecret(id, token);
+      const therapistId = thunkAPI.getState().auth.therapist._id;
+      const token = thunkAPI.getState().auth.therapist.token;
+      return await paymentService.handlePaymentCompletion(therapistId, token);
     } catch (error) {
       const message =
         (error.response &&
@@ -42,15 +42,14 @@ export const paymentSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getClientSecret.pending, (state) => {
+      .addCase(handlePaymentCompletion.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getClientSecret.fulfilled, (state, action) => {
+      .addCase(handlePaymentCompletion.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.clientSecret = action.payload;
       })
-      .addCase(getClientSecret.rejected, (state, action) => {
+      .addCase(handlePaymentCompletion.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

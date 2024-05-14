@@ -12,10 +12,11 @@ import Image from "next/image";
 const Navbar = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  
+
   const menus = [
     { title: "Dashboard", path: "/" },
     { title: "Appointments", path: "/appointment" },
+    { title: "Profile", path: "/auth/profile" },
   ];
 
   const pathname = usePathname();
@@ -27,7 +28,6 @@ const Navbar = () => {
 
   return (
     <div className="bg-lilacWhite w-full flex justify-between items-center p-8 rounded-md">
-      {/* <h1 className="text-deepAqua font-bold text-3xl">App Logo Here</h1> */}
       <Image src="/logo.png" width={120} height={120} alt="logo" />
 
       <div className="flex gap-10">
@@ -46,7 +46,10 @@ const Navbar = () => {
         ))}
       </div>
 
-      <div className="flex gap-4 items-center bg-aqua p-4 rounded-full cursor-pointer" onClick={onLogout}>
+      <div
+        className="flex gap-4 items-center bg-aqua p-4 rounded-full cursor-pointer"
+        onClick={onLogout}
+      >
         {/* <p className="text-lg text-black font-medium">Anees</p> */}
         <CgLogOut size={26} className="text-deepAqua" />
       </div>

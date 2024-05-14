@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createOrOpenChat } from "../../app/redux/features/chat-app/chatSlice";
 
 interface AppointmentCardProps {
+  appointmentId: string
   userID: string;
   name: string;
   appointmentDate: string;
@@ -18,6 +19,7 @@ interface AppointmentCardProps {
 }
 
 const AppointmentCard: React.FC<AppointmentCardProps> = ({
+  appointmentId,
   userID,
   name,
   appointmentDate,
@@ -67,7 +69,7 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
 
   const createMeeting = () => {
     const meetingId = crypto.randomUUID();
-    router.push(`meeting/${meetingId}`);
+    router.push(`meeting/${appointmentId}`);
   };
 
   const openChat = () => {
