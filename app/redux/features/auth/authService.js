@@ -3,9 +3,20 @@ import axios from "axios";
 const API_URL = "http://127.0.0.1:5005/therapist/auth";
 
 // Register user
-const register = async (userData) => {
-  const response = await axios.post(`${API_URL}/signup`, userData);
-  return response.data;
+const register = async (formData) => {
+  try {
+    const response = await axios.post(`${API_URL}/signup`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    throw error.response
+      ? error.response.data
+      : new Error("Registration failed");
+  }
 };
 
 // Login user
@@ -18,7 +29,6 @@ const login = async (userData) => {
 
   return response.data;
 };
-
 
 // Profile save
 const saveProfile = async (token, data) => {
@@ -51,7 +61,7 @@ const authService = {
   register,
   logout,
   login,
-  saveProfile
+  saveProfile,
 };
 
 export default authService;
