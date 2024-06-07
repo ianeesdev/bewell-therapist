@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import appointmentService from "./appointmentService";
+import { getLocalStorageItem } from '../../../../lib/utils.ts';
 
 // Get appointments from localStorage
-const therapistAppointments = JSON.parse(localStorage.getItem("therapistAppointments"));
+const therapistAppointments = JSON.parse(getLocalStorageItem("therapistAppointments"));
 
 const initialState = {
   therapistAppointments: therapistAppointments ? therapistAppointments : null,

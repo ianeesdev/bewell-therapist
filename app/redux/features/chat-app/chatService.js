@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setLocalStorageItem } from '../../../../lib/utils.ts';
 
 const API_URL = "http://127.0.0.1:5009";
 
@@ -11,7 +12,7 @@ const createOrOpenChat = async (userId, token) => {
   });
 
   if (response.data) {
-    localStorage.setItem("activeChat", JSON.stringify(response.data));
+    setLocalStorageItem("activeChat", JSON.stringify(response.data));
   }
 
   return response.data;
@@ -26,7 +27,7 @@ const getUserChats = async (token) => {
   });
 
   if (response.data) {
-    localStorage.setItem("chats", JSON.stringify(response.data));
+    setLocalStorageItem("chats", JSON.stringify(response.data));
   }
 
   return response.data;
@@ -41,7 +42,7 @@ const sendMessage = async (data, token) => {
   });
 
   if (response.data) {
-    localStorage.setItem("messages", JSON.stringify(response.data));
+    setLocalStorageItem("messages", JSON.stringify(response.data));
   }
 
   return response.data;
@@ -56,7 +57,7 @@ const getMessages = async (chatId, token) => {
   });
 
   if (response.data) {
-    localStorage.setItem("messages", JSON.stringify(response.data));
+    setLocalStorageItem("messages", JSON.stringify(response.data));
   }
 
   return response.data;
