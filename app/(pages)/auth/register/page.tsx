@@ -167,9 +167,10 @@ export default function Page() {
                 onChange={(e) => setUsername(e.target.value)}
               />
               <InputField
-                type="text"
+                type="number"
                 placeholder="CNIC"
                 value={cnic}
+                
                 onChange={(e) => setCnic(e.target.value)}
               />
               <InputField
