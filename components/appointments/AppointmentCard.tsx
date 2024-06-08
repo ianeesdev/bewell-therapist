@@ -111,9 +111,9 @@ const AppointmentCard: React.FC<AppointmentCardProps> = ({
             <Button variant="outline" className="px-10 py-2" onClick={openChat}>
               Send Message
             </Button>
-            <Button variant="primary" className="px-10 py-2">
+            {/* <Button variant="primary" className="px-10 py-2">
               View Details
-            </Button>
+            </Button> */}
           </div>
         </div>
       </div>
