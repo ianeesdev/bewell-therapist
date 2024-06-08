@@ -3,6 +3,8 @@ import { poppins } from "@/app/ui/fonts";
 import "@/app/ui/globals.css";
 import { ReduxProvider } from "../app/redux/provider";
 import { AppProvider } from "../AppContext";
+import { ToastContainer, Slide } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "Be Well - Therapist",
@@ -20,6 +22,11 @@ export default function RootLayout({
         <ReduxProvider>
           <AppProvider>{children}</AppProvider>
         </ReduxProvider>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          transition={Slide}
+        />
       </body>
     </html>
   );

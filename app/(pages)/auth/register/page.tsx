@@ -3,14 +3,13 @@
 import React, { useState, useEffect } from "react";
 import InputField from "@/components/common/InputField";
 import Button from "@/components/common/Button";
-
 import Image from "next/image";
 import Link from "next/link";
-
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { register, reset } from "../../../redux/features/auth/authSlice";
 import Popup from "@/components/common/Popup";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const [showPopup, setShowPopup] = useState(false);
@@ -37,7 +36,7 @@ export default function Page() {
 
   useEffect(() => {
     if (isError) {
-      alert("Error");
+      toast.error(message);
     }
 
     if (isSuccess) {
@@ -47,56 +46,94 @@ export default function Page() {
     dispatch(reset());
   }, [user, isError, isSuccess, message, router, dispatch]);
 
-  const onSubmit = (e: any) => {
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const onSubmit = (e) => {
     e.preventDefault();
 
-    if (password !== password2) {
-      alert("Passwords do not match");
-    } else {
-      const formData = new FormData();
-
-      formData.append("username", username);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("cnic", cnic);
-
-      // Append multiple files for educationCertificates
-      if (educationCertificates && educationCertificates.length > 0) {
-        Array.from(educationCertificates).forEach((file, index) => {
-          formData.append(`educationCertificates`, file);
-        });
-      }
-
-      // Append single file for professionalLicense
-      if (professionalLicense) {
-        formData.append("professionalLicense", professionalLicense);
-      }
-
-      // Append multiple files for professionalMemberships
-      if (professionalMemberships && professionalMemberships.length > 0) {
-        Array.from(professionalMemberships).forEach((file, index) => {
-          formData.append(`professionalMemberships`, file);
-        });
-      }
-
-      // Append multiple files for experienceCertificates
-      if (experienceCertificates && experienceCertificates.length > 0) {
-        Array.from(experienceCertificates).forEach((file, index) => {
-          formData.append(`experienceCertificates`, file);
-        });
-      }
-
-      // Append single file for criminalRecordCheck
-      if (criminalRecordCheck) {
-        formData.append("criminalRecordCheck", criminalRecordCheck);
-      }
-
-      // Log the FormData object before dispatching
-      console.log("Form Data:", formData);
-
-      // Dispatch the form data to the backend
-      dispatch(register(formData));
+    // Check if any field is empty
+    if (!username || !email || !password || !password2 || !cnic) {
+      toast.error("All fields are required.");
+      return;
     }
+
+    // Check if any required document is missing
+    if (!educationCertificates.length) {
+      toast.error("Educational Certificates are required.");
+      return;
+    }
+    if (!professionalLicense) {
+      toast.error("Professional License is required.");
+      return;
+    }
+    if (!professionalMemberships.length) {
+      toast.error("Professional Memberships are required.");
+      return;
+    }
+    if (!experienceCertificates.length) {
+      toast.error("Experience Certificates are required.");
+      return;
+    }
+    if (!criminalRecordCheck) {
+      toast.error("Criminal Record Check is required.");
+      return;
+    }
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long.");
+      return;
+    }
+
+    // Validate password match
+    if (password !== password2) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("cnic", cnic);
+
+    // Append multiple files for educationCertificates
+    Array.from(educationCertificates).forEach((file) => {
+      formData.append("educationCertificates", file);
+    });
+
+    // Append single file for professionalLicense
+    if (professionalLicense) {
+      formData.append("professionalLicense", professionalLicense);
+    }
+
+    // Append multiple files for professionalMemberships
+    Array.from(professionalMemberships).forEach((file) => {
+      formData.append("professionalMemberships", file);
+    });
+
+    // Append multiple files for experienceCertificates
+    Array.from(experienceCertificates).forEach((file) => {
+      formData.append("experienceCertificates", file);
+    });
+
+    // Append single file for criminalRecordCheck
+    if (criminalRecordCheck) {
+      formData.append("criminalRecordCheck", criminalRecordCheck);
+    }
+
+    // Dispatch the form data to the backend
+    dispatch(register(formData));
   };
 
   return (
@@ -164,7 +201,6 @@ export default function Page() {
                 onChange={(e) => setEducationCertificates(e.target.files)}
                 multiple
                 className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                required
               />
               <label className="text-lg font-medium -mb-5">
                 Professional License
@@ -174,7 +210,6 @@ export default function Page() {
                 accept=".pdf,.jpg,.jpeg,.png"
                 onChange={(e) => setProfessionalLicense(e.target.files[0])}
                 className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                required
               />
               <label className="text-lg font-medium -mb-5">
                 Professional Memberships
@@ -185,7 +220,6 @@ export default function Page() {
                 onChange={(e) => setProfessionalMemberships(e.target.files)}
                 multiple
                 className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                required
               />
               <label className="text-lg font-medium -mb-5">
                 Experience Certificates
@@ -196,7 +230,6 @@ export default function Page() {
                 onChange={(e) => setExperienceCertificates(e.target.files)}
                 multiple
                 className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                required
               />
               <label className="text-lg font-medium -mb-5">
                 Criminal Record Check
@@ -206,7 +239,6 @@ export default function Page() {
                 accept=".pdf,.jpg,.jpeg,.png"
                 onChange={(e) => setCriminalRecordCheck(e.target.files[0])}
                 className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                required
               />
 
               <Button type="submit">

@@ -11,6 +11,7 @@ import { saveProfile } from "../../../redux/features/auth/authSlice";
 import Image from "next/image";
 import Navbar from "@/components/common/Navbar";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const router = useRouter();
@@ -34,12 +35,23 @@ export default function Page() {
 
   useEffect(() => {
     if (isError) {
-      alert(message);
+      toast.error(message);
     }
   }, [therapist, isError, isSuccess, message, router, dispatch]);
 
+  const validateInputs = () => {
+    if (!name || !speciality || !location || !experience || !totalPatients || !hourlyRate || !about) {
+      toast.error("All fields are required.");
+      return false;
+    }
+    return true;
+  };
+
   const onSubmit = (event: any) => {
     event.preventDefault();
+    if (!validateInputs()) {
+      return;
+    }
     const therapistId = therapist?._id;
     const profileData = {
       therapistId,
@@ -136,7 +148,7 @@ export default function Page() {
                   onChange={(e) => setHourlyRate(e.target.value)}
                 />
               </div>
-              <div className="flex gap-8 items-center">
+              {/* <div className="flex gap-8 items-center">
                 <InputField
                   type="text"
                   placeholder="Stripe Id"
@@ -149,7 +161,7 @@ export default function Page() {
                   value={cardNumber}
                   onChange={(e) => setCardNumber(e.target.value)}
                 />
-              </div>
+              </div> */}
 
               <div>
                 <InputField

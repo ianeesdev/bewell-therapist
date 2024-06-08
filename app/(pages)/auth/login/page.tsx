@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import { login } from "../../../redux/features/auth/authSlice";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const [email, setEmail] = useState("");
@@ -25,16 +26,32 @@ export default function Page() {
 
   useEffect(() => {
     if (isError) {
-      alert(message);
+      toast.error(message);
     }
 
     if (therapist?.isLoggedIn) {
       therapist?.onboarded ? router.push("/") : router.push("/auth/profile");
+      toast.success("Logged in successfully!");
     }
   }, [therapist, isError, isSuccess, message, router, dispatch]);
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
   const onSubmit = (e: any) => {
     e.preventDefault();
+
+    if (!email || !password) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    if (!validateEmail(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
 
     const userData = {
       email,

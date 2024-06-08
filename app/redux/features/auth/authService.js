@@ -17,38 +17,48 @@ const register = async (formData) => {
 
     return response.data;
   } catch (error) {
-    throw error.response
-      ? error.response.data
-      : new Error("Registration failed");
+    throw new Error(
+      error.response.data.error || "An error occurred while registering user."
+    );
   }
 };
 
 // Login user
 const login = async (userData) => {
-  const response = await axios.post(`${API_URL}/login`, userData);
+  try {
+    const response = await axios.post(`${API_URL}/login`, userData);
 
-  if (response.data) {
-    setLocalStorageItem("therapist", JSON.stringify(response.data));
+    if (response.data) {
+      setLocalStorageItem("therapist", JSON.stringify(response.data));
+    }
+
+    return response.data;
+  } catch (error) {
+    throw new Error(
+      error.response.data.error || "An error occurred while logging in."
+    );
   }
-
-  return response.data;
 };
 
 // Profile save
 const saveProfile = async (token, data) => {
-  const config = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  try {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
 
-  const response = await axios.post(`${API_URL}/profile`, data, config);
+    const response = await axios.post(`${API_URL}/profile`, data, config);
 
-  if (response.data) {
-    setLocalStorageItem("therapist", JSON.stringify(response.data));
+    if (response.data) {
+      setLocalStorageItem("therapist", JSON.stringify(response.data));
+    }
+
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response.data.error || "An error occurred.");
   }
-
-  return response.data;
 };
 
 // Logout user
